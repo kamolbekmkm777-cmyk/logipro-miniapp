@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<title>LogiPro Bot Qo'llanma</title>
+<style>
+:root{
+  --bg:#0b1220;--card:#121b2e;--card2:#18243c;--text:#e8eefc;--muted:#93a3c4;
+  --accent:#ff8a00;--blue:#2aa3ff;--green:#22c55e;--red:#ef4444;--line:#24324f;
+  --bubble-me:#2b5278;--bubble-bot:#1e2c45;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#f4f7fc;--card:#ffffff;--card2:#eef3fb;--text:#0f1b33;--muted:#5a6a8a;--line:#d9e2f1;
+  --bubble-me:#d8ecff;--bubble-bot:#ffffff;}}
+:root[data-theme="light"]{--bg:#f4f7fc;--card:#ffffff;--card2:#eef3fb;--text:#0f1b33;--muted:#5a6a8a;--line:#d9e2f1;--bubble-me:#d8ecff;--bubble-bot:#ffffff;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+header{padding:56px 0 32px;text-align:center}
+.truck{display:inline-block;animation:drive 3s ease-in-out infinite}
+@keyframes drive{0%,100%{transform:translateX(-30px)}50%{transform:translateX(30px)}}
+h1{font-size:clamp(28px,5vw,44px);margin:8px 0}
+h1 span{color:var(--accent)}
+.sub{color:var(--muted);max-width:620px;margin:0 auto}
+nav{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:6px;overflow-x:auto;padding:10px 16px}
+nav a{white-space:nowrap;color:var(--muted);text-decoration:none;padding:6px 12px;border-radius:999px;font-size:14px}
+nav a:hover{background:var(--card2);color:var(--text)}
+section{padding:48px 0;border-bottom:1px solid var(--line)}
+h2{font-size:28px;margin:0 0 6px}
+.lead{color:var(--muted);margin:0 0 28px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+.reveal{opacity:0;transform:translateY(24px);transition:.6s ease}
+.reveal.on{opacity:1;transform:none}
+.step{display:flex;gap:14px;align-items:flex-start}
+.num{flex:0 0 36px;height:36px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+code{background:var(--card2);padding:2px 6px;border-radius:6px;font-size:14px}
+/* phone */
+.demo{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:center}
+@media (max-width:760px){.demo{grid-template-columns:1fr}}
+.phone{width:100%;max-width:320px;margin:0 auto;background:#0e1621;border-radius:32px;padding:12px;border:6px solid #2a3446;box-shadow:0 20px 50px #0006}
+.screen{background:#0e1621;border-radius:22px;height:440px;overflow:hidden;display:flex;flex-direction:column}
+.top{background:#17212b;color:#fff;padding:10px 14px;font-size:14px;display:flex;gap:8px;align-items:center}
+.ava{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#0a3d8f,#08a0d8);display:grid;place-items:center}
+.chat{flex:1;padding:12px;display:flex;flex-direction:column;gap:8px;overflow:hidden;justify-content:flex-end}
+.msg{max-width:85%;padding:8px 11px;border-radius:14px;font-size:13px;color:#fff;opacity:0;transform:scale(.9);animation:pop .4s forwards}
+.me{align-self:flex-end;background:#2b5278;border-bottom-right-radius:4px}
+.bot{align-self:flex-start;background:#1e2c45;border-bottom-left-radius:4px}
+.kb{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px}
+.kb span{background:#2a3a55;border-radius:8px;padding:5px;text-align:center;font-size:11px}
+.kb span.hit{animation:tap 1s 1}
+@keyframes pop{to{opacity:1;transform:none}}
+@keyframes tap{50%{background:var(--accent)}}
+.replay{margin-top:12px;background:var(--card2);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:8px 14px;cursor:pointer}
+/* roles */
+.role{position:relative;overflow:hidden}
+.role h3{margin:0 0 10px}
+.perm{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--line);font-size:15px}
+.ok{color:var(--green)}.no{color:var(--red)}.eye{color:var(--blue)}
+.badge{position:absolute;right:16px;top:16px;animation:float 3s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-6px)}}
+/* flow */
+.flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
+.node{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;text-align:center;min-width:120px}
+.node b{display:flex;justify-content:center;margin-bottom:8px}
+.arrow{width:50px;height:4px;background:linear-gradient(90deg,var(--accent) 50%,transparent 0) 0/16px 4px;animation:dash .6s linear infinite}
+@keyframes dash{to{background-position:16px 0}}
+.groups{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.g{background:var(--card2);border-radius:10px;padding:6px 10px;font-size:13px;animation:blink 2.4s infinite}
+.g:nth-child(2){animation-delay:.3s}.g:nth-child(3){animation-delay:.6s}.g:nth-child(4){animation-delay:.9s}.g:nth-child(5){animation-delay:1.2s}
+@keyframes blink{0%,100%{box-shadow:none}30%{box-shadow:0 0 0 2px var(--green)}}
+/* clock */
+.clock{width:160px;height:160px;border-radius:50%;border:6px solid var(--line);position:relative;margin:0 auto}
+.hand{position:absolute;left:50%;bottom:50%;width:4px;height:62px;background:var(--accent);transform-origin:bottom;border-radius:4px;animation:spin 6s linear infinite}
+@keyframes spin{to{transform:translateX(-50%) rotate(360deg)}}
+.hand{transform:translateX(-50%)}
+.dot{position:absolute;inset:50%;width:12px;height:12px;margin:-6px;border-radius:50%;background:var(--text)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:600}
+td.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.total td{font-weight:700;font-size:18px;border-bottom:none}
+.note{color:var(--muted);font-size:13px;margin-top:10px}
+.pill{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;background:var(--card2);color:var(--muted)}
+.bar{height:10px;border-radius:6px;background:var(--card2);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--accent));transition:width 1.4s ease}
+.on .bar i{width:var(--w)}
+
+/* ---------- liquid glass icons ---------- */
+.gl{--c1:#5ab8ff;--c2:#2a6dff;position:relative;display:inline-grid;place-items:center;width:var(--s,44px);height:var(--s,44px);
+  border-radius:calc(var(--s,44px)*.3);flex:0 0 auto;vertical-align:middle;isolation:isolate;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--c1) 85%,#fff),var(--c2));
+  box-shadow:inset 0 1px 1px #fff9,inset 0 -6px 12px #0003,0 6px 16px color-mix(in srgb,var(--c2) 45%,transparent),0 1px 2px #0004}
+.gl::before{content:"";position:absolute;inset:1px;border-radius:inherit;z-index:-1;
+  background:radial-gradient(120% 70% at 30% 0%,#ffffffcc 0%,#ffffff33 38%,transparent 60%);mix-blend-mode:screen}
+.gl::after{content:"";position:absolute;inset:0;border-radius:inherit;border:1px solid #ffffff55;
+  background:linear-gradient(115deg,transparent 40%,#ffffff40 50%,transparent 60%) -150% 0/250% 100% no-repeat;animation:shine 5s ease-in-out infinite}
+@keyframes shine{0%,60%{background-position:-150% 0}100%{background-position:150% 0}}
+.gl svg{width:52%;height:52%;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 1px 1px #0005)}
+.gl.or{--c1:#ffb547;--c2:#ff6a00}.gl.gr{--c1:#5ee38f;--c2:#0fa958}.gl.rd{--c1:#ff8a8a;--c2:#e5263b}
+.gl.pu{--c1:#b99bff;--c2:#6b3cff}.gl.gd{--c1:#ffe27a;--c2:#e0a400}.gl.sl{--c1:#a9b8d6;--c2:#56658a}
+.gl.sm{--s:22px}.gl.md{--s:34px}.gl.lg{--s:56px}.gl.xl{--s:92px}
+h2 .gl,h3 .gl{margin-right:10px}
+nav a{display:inline-flex;align-items:center;gap:6px}
+footer{padding:32px 0;text-align:center;color:var(--muted);font-size:14px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}.msg{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div id="gate" style="position:fixed;inset:0;z-index:99;display:grid;place-items:center;background:var(--bg);text-align:center;padding:24px">
+  <div><div style="font-size:48px">🔒</div><h2>Faqat adminlar uchun</h2>
+  <p class="sub">Bu qo'llanma @logipro_reklama_uz_bot ichida, admin menyusidagi "📘 Qo'llanma" tugmasi orqali ochiladi.</p></div>
+</div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="i-truck" viewBox="0 0 24 24"><path d="M3 6h11v10H3z"/><path d="M14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></symbol>
+<symbol id="i-rocket" viewBox="0 0 24 24"><path d="M5 15c-1.5 1.3-2 4-2 6 2 0 4.7-.5 6-2"/><path d="M9 15l-3-3c1-3 3.5-7 9-9 1.5-.5 3.5-.5 6-.5 0 2.5 0 4.5-.5 6-2 5.5-6 8-9 9z"/><circle cx="15" cy="9" r="1.6"/></symbol>
+<symbol id="i-panel" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c1.9.8 3.1 2.6 3.5 5.2"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+<symbol id="i-crown" viewBox="0 0 24 24"><path d="M3 8l4 4 5-7 5 7 4-4-2 11H5z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 8h6"/></symbol>
+<symbol id="i-coins" viewBox="0 0 24 24"><ellipse cx="9" cy="7" rx="6" ry="3"/><path d="M3 7v5c0 1.7 2.7 3 6 3s6-1.3 6-3V7"/><path d="M9 15v2c0 1.7 2.7 3 6 3s6-1.3 6-3v-5c0-1.7-2.7-3-6-3"/></symbol>
+<symbol id="i-mega" viewBox="0 0 24 24"><path d="M3 10v4h4l8 5V5L7 10z"/><path d="M19 9a4 4 0 0 1 0 6"/></symbol>
+<symbol id="i-bot" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4v4M9 13h0M15 13h0M9 17h6"/><circle cx="12" cy="3.5" r="1"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+<symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1L7 17M17 7l2.1-2.1"/></symbol>
+<symbol id="i-hash" viewBox="0 0 24 24"><path d="M5 9h14M5 15h14M10 4L8 20M16 4l-2 16"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h0M4 12h0M4 18h0"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h13v4"/><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="16.5" cy="13.5" r="1.3"/></symbol>
+<symbol id="i-flow" viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" rx="1.5"/><rect x="15" y="15" width="6" height="6" rx="1.5"/><path d="M9 6h4a3 3 0 0 1 3 3v6"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></symbol>
+</svg>
+<header class="wrap">
+  <div class="truck"><span class="gl or xl"><svg><use href="#i-truck"/></svg></span></div>
+  <h1>LogiPro <span>Reklama Bot</span></h1>
+  <p class="sub">Logistika guruhlariga reklamani avtomatik joylovchi botni boshqarish bo'yicha vizual qo'llanma. Bot: <b>@logipro_reklama_uz_bot</b></p>
+</header>
+
+<nav><div class="wrap">
+  <a href="#start"><span class="gl or sm"><svg><use href="#i-rocket"/></svg></span>Boshlash</a><a href="#panel"><span class="gl  sm"><svg><use href="#i-panel"/></svg></span>Panel</a><a href="#newad"><span class="gl gr sm"><svg><use href="#i-plus"/></svg></span>Reklama</a>
+  <a href="#time"><span class="gl pu sm"><svg><use href="#i-clock"/></svg></span>Vaqt</a><a href="#groups"><span class="gl  sm"><svg><use href="#i-users"/></svg></span>Guruhlar</a><a href="#admins"><span class="gl gr sm"><svg><use href="#i-shield"/></svg></span>Adminlar</a>
+  <a href="#cmds"><span class="gl sl sm"><svg><use href="#i-book"/></svg></span>Buyruqlar</a><a href="#cost"><span class="gl gd sm"><svg><use href="#i-coins"/></svg></span>Xarajatlar</a>
+</div></nav>
+
+<main class="wrap">
+
+<section id="start">
+  <h2><span class="gl or md"><svg><use href="#i-rocket"/></svg></span>3 qadamda boshlash</h2>
+  <p class="lead">Bot ishlashi uchun kerak bo'lgan hamma narsa.</p>
+  <div class="grid">
+    <div class="card reveal step"><div class="num">1</div><div><b>Botni guruhga qo'shing</b><br>Guruh → Add Members → <code>@logipro_reklama_uz_bot</code></div></div>
+    <div class="card reveal step"><div class="num">2</div><div><b>Admin qiling</b><br>Guruh → Edit → Administrators → Add Admin. Bot guruhni o'zi ro'yxatga oladi.</div></div>
+    <div class="card reveal step"><div class="num">3</div><div><b>Panelni oching</b><br>Botga shaxsiy xabarda <code>/panel</code> yozing — hammasi tugmalar orqali.</div></div>
+  </div>
+</section>
+
+<section id="panel">
+  <div class="demo">
+    <div>
+      <h2><span class="gl  md"><svg><use href="#i-panel"/></svg></span>Boshqaruv paneli</h2>
+      <p class="lead">Barcha sozlamalar bitta oynada. Tugmani bosasiz — bot o'zi so'raydi.</p>
+      <div class="card reveal">
+        <div class="perm"><span>➕ Yangi reklama</span><span class="pill">kontent yuborasiz</span></div>
+        <div class="perm"><span>📢 Reklamalar</span><span class="pill">ko'rish, yoqish/o'chirish</span></div>
+        <div class="perm"><span>⏱ Vaqt sozlash</span><span class="pill">interval yoki soatlar</span></div>
+        <div class="perm"><span>👥 Guruhlar</span><span class="pill">ro'yxat, ID qo'shish</span></div>
+        <div class="perm"><span>🚀 Hozir yuborish</span><span class="pill">darhol hamma guruhga</span></div>
+        <div class="perm"><span>⏸ Pauza</span><span class="pill">to'xtatish/davom</span></div>
+        <div class="perm"><span>👮 Adminlar</span><span class="pill">ro'yxat va huquqlar</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="phone"><div class="screen">
+        <div class="top"><div class="ava">🚚</div><div><b>LogiPro</b><br><small style="opacity:.6">bot</small></div></div>
+        <div class="chat" id="chat1"></div>
+      </div></div>
+      <div style="text-align:center"><button class="replay" data-play="chat1">↻ Qayta ko'rsatish</button></div>
+    </div>
+  </div>
+</section>
+
+<section id="newad">
+  <div class="demo">
+    <div>
+      <h2><span class="gl gr md"><svg><use href="#i-plus"/></svg></span>Reklama qo'shish</h2>
+      <p class="lead">Rasm, matn, emoji, stiker, video, GIF, ovozli xabar, fayl yoki albom — istalgan narsa.</p>
+      <div class="card reveal step"><div class="num">1</div><div><code>/newad</code> yoki panelda <b>➕ Yangi reklama</b></div></div><br>
+      <div class="card reveal step"><div class="num">2</div><div>Reklamani oddiy xabar kabi yuboring. Qalin/kursiv yozuvlar saqlanadi.</div></div><br>
+      <div class="card reveal step"><div class="num">3</div><div>Tugma qo'shing: <code>📞 Bog'lanish - https://t.me/username</code> yoki <code>/skip</code></div></div>
+    </div>
+    <div>
+      <div class="phone"><div class="screen">
+        <div class="top"><div class="ava">🚚</div><div><b>LogiPro</b><br><small style="opacity:.6">bot</small></div></div>
+        <div class="chat" id="chat2"></div>
+      </div></div>
+      <div style="text-align:center"><button class="replay" data-play="chat2">↻ Qayta ko'rsatish</button></div>
+    </div>
+  </div>
+</section>
+
+<section id="time">
+  <h2><span class="gl pu md"><svg><use href="#i-clock"/></svg></span>Yuborish vaqti</h2>
+  <p class="lead">Vaqtni faqat adminlar o'zgartira oladi.</p>
+  <div class="grid">
+    <div class="card reveal" style="text-align:center"><div class="clock"><div class="hand"></div><div class="dot"></div></div>
+      <p><b>Interval</b><br><code>/interval 60</code> · <code>/interval 2h</code><br><span class="pill">har N daqiqada</span></p></div>
+    <div class="card reveal"><h3><span class="gl or md"><svg><use href="#i-clock"/></svg></span>Aniq soatlar</h3><p><code>/times 09:00,13:00,18:00</code></p><p class="note">O'chirish: <code>/times off</code></p></div>
+    <div class="card reveal"><h3><span class="gl pu md"><svg><use href="#i-moon"/></svg></span>Tungi rejim</h3><p><code>/hours 7 23</code> — faqat 07:00–23:00 oralig'ida yuboradi.</p><p class="note">24 soat: <code>/hours 0 0</code></p></div>
+    <div class="card reveal"><h3><span class="gl sl md"><svg><use href="#i-gear"/></svg></span>Rejim</h3><p>🔄 <b>Navbat bilan</b> — har safar bitta reklama<br>📚 <b>Hammasi birga</b> — barcha faol reklamalar</p><p class="note">🧹 Eskisini o'chirish — guruh spamga to'lmaydi</p></div>
+  </div>
+</section>
+
+<section id="groups">
+  <h2><span class="gl  md"><svg><use href="#i-users"/></svg></span>Bir vaqtda ko'p guruhga</h2>
+  <p class="lead">Bot qo'shilgan har bir guruh va kanal avtomatik ro'yxatga tushadi. Bir vaqtda 20 tagacha guruhga parallel yuboradi.</p>
+  <div class="flow reveal">
+    <div class="node"><b><span class="gl gd lg"><svg><use href="#i-crown"/></svg></span></b>Admin</div><div class="arrow"></div>
+    <div class="node"><b><span class="gl or lg"><svg><use href="#i-bot"/></svg></span></b>LogiPro bot</div><div class="arrow"></div>
+    <div class="node"><b><span class="gl gr lg"><svg><use href="#i-mega"/></svg></span></b>Guruhlar</div>
+  </div>
+  <div class="groups"><div class="g">🚛 Fura Toshkent</div><div class="g">📦 Cargo UZ-RU</div><div class="g">🇹🇷 Yuk Turkiya</div><div class="g">❄️ Ref yuk</div><div class="g">📣 Kanal</div></div>
+  <div class="grid" style="margin-top:24px">
+    <div class="card reveal"><b>Qo'lda qo'shish</b><br><code>/addchat -100123456789</code><br><code>/addchat @kanal</code></div>
+    <div class="card reveal"><b>ID ni bilish</b><br>Guruhda <code>/id</code> yozing</div>
+    <div class="card reveal"><b>Ro'yxat</b><br><code>/chats</code> — 🟢 faol · ⚫️ chiqarilgan · ⚠️ huquq yo'q</div>
+  </div>
+</section>
+
+<section id="admins">
+  <h2><span class="gl gr md"><svg><use href="#i-shield"/></svg></span>Ikki darajali adminlar</h2>
+  <p class="lead">Bosh admin boshqa adminlarni tayinlaydi. Oddiy admin ularni faqat ko'radi.</p>
+  <div class="grid">
+    <div class="card role reveal"><div class="badge"><span class="gl gd lg"><svg><use href="#i-crown"/></svg></span></div><h3>Bosh admin</h3>
+      <div class="perm"><span>Reklama va vaqt</span><span class="ok">✔</span></div>
+      <div class="perm"><span>Guruhlar, pauza, statistika</span><span class="ok">✔</span></div>
+      <div class="perm"><span>Adminlarni ko'rish</span><span class="ok">✔</span></div>
+      <div class="perm"><span>Admin qo'shish</span><span class="ok">✔</span></div>
+      <div class="perm"><span>Admin o'chirish</span><span class="ok">✔</span></div>
+    </div>
+    <div class="card role reveal"><div class="badge"><span class="gl lg"><svg><use href="#i-shield"/></svg></span></div><h3>Admin (2-daraja)</h3>
+      <div class="perm"><span>Reklama va vaqt</span><span class="ok">✔</span></div>
+      <div class="perm"><span>Guruhlar, pauza, statistika</span><span class="ok">✔</span></div>
+      <div class="perm"><span>Adminlarni ko'rish</span><span class="eye">👁 faqat ko'radi</span></div>
+      <div class="perm"><span>Admin qo'shish</span><span class="no">✖</span></div>
+      <div class="perm"><span>Admin o'chirish</span><span class="no">✖</span></div>
+    </div>
+    <div class="card role reveal"><div class="badge"><span class="gl sl lg"><svg><use href="#i-user"/></svg></span></div><h3>Oddiy foydalanuvchi</h3>
+      <div class="perm"><span>/start, /help, /id</span><span class="ok">✔</span></div>
+      <div class="perm"><span>Botni guruhiga qo'shish</span><span class="ok">✔</span></div>
+      <div class="perm"><span>Sozlamalar</span><span class="no">✖</span></div>
+    </div>
+  </div>
+  <div class="card reveal" style="margin-top:16px"><b>Admin qo'shish:</b> panel → 👮 Adminlar → ➕ Admin qo'shish → odamning ID sini yuboring (yoki <code>/addadmin 123456789</code>). Odam ID sini botga <code>/start</code> yozib bilib oladi.</div>
+</section>
+
+<section id="cmds">
+  <h2><span class="gl sl md"><svg><use href="#i-book"/></svg></span>Barcha buyruqlar</h2>
+  <div class="card reveal"><table>
+    <tr><th>Buyruq</th><th>Vazifa</th><th>Kim</th></tr>
+    <tr><td><code>/panel</code></td><td>Boshqaruv paneli</td><td>👑👮</td></tr>
+    <tr><td><code>/newad</code></td><td>Yangi reklama</td><td>👑👮</td></tr>
+    <tr><td><code>/ads</code></td><td>Reklamalar ro'yxati</td><td>👑👮</td></tr>
+    <tr><td><code>/interval</code> · <code>/times</code> · <code>/hours</code></td><td>Vaqt sozlamalari</td><td>👑👮</td></tr>
+    <tr><td><code>/sendnow</code> · <code>/pause</code> · <code>/resume</code></td><td>Yuborishni boshqarish</td><td>👑👮</td></tr>
+    <tr><td><code>/chats</code> · <code>/addchat</code> · <code>/delchat</code></td><td>Guruhlar</td><td>👑👮</td></tr>
+    <tr><td><code>/stats</code> · <code>/admins</code></td><td>Statistika, adminlar ro'yxati</td><td>👑👮</td></tr>
+    <tr><td><code>/addadmin</code> · <code>/deladmin</code></td><td>Admin qo'shish/o'chirish</td><td>👑</td></tr>
+    <tr><td><code>/id</code> · <code>/cancel</code></td><td>Chat ID, bekor qilish</td><td>hamma</td></tr>
+  </table></div>
+</section>
+
+<section id="cost">
+  <h2><span class="gl gd md"><svg><use href="#i-coins"/></svg></span>Loyiha qiymati</h2>
+  <p class="lead">Xuddi shu darajadagi botni studiyaga buyurtma qilish, n8n bilan yig'ish va mening yechimim — narx va sifat taqqoslamasi.</p>
+  <div class="grid">
+    <div class="card reveal" style="text-align:center"><span class="gl gd lg"><svg><use href="#i-star"/></svg></span><p class="note">Studiyaga buyurtma, 1-yil</p><div style="font-size:34px;font-weight:800">$5 250</div><p class="note">bozor bahosi</p></div>
+    <div class="card reveal" style="text-align:center"><span class="gl pu lg"><svg><use href="#i-flow"/></svg></span><p class="note">n8n bilan, 3 yil</p><div style="font-size:34px;font-weight:800">$820</div><p class="note">$20/oy + o'rnatish</p></div>
+    <div class="card reveal" style="text-align:center"><span class="gl gr lg"><svg><use href="#i-wallet"/></svg></span><p class="note">Mening professional yechimim</p><div style="font-size:34px;font-weight:800;color:var(--green)">$20</div><p class="note">Claude API $5 + server $15</p></div>
+  </div>
+
+  <div class="card reveal" style="margin-top:16px">
+    <h3><span class="gl md"><svg><use href="#i-chart"/></svg></span>Studiyaga buyurtma qilinsa (to'liq hisob)</h3>
+    <table>
+      <tr><th>Ish</th><th class="r">Vaqt</th><th class="r">Narx</th></tr>
+      <tr><td>Talablar tahlili va loyiha arxitekturasi</td><td class="r">8 soat</td><td class="r">$360</td></tr><tr><td>Bot yadrosi: 9 xil media  albom  tugmalar</td><td class="r">24 soat</td><td class="r">$1 080</td></tr><tr><td>Boshqaruv paneli va 2 darajali adminlar</td><td class="r">16 soat</td><td class="r">$720</td></tr><tr><td>Rejalashtiruvchi: interval  aniq soat  tungi rejim</td><td class="r">10 soat</td><td class="r">$450</td></tr><tr><td>Parallel yuborish  Telegram limitlari  xatolarga chidamlilik</td><td class="r">14 soat</td><td class="r">$630</td></tr><tr><td>Dizayn: avatar  reklama banneri  tavsiflar</td><td class="r">8 soat</td><td class="r">$360</td></tr><tr><td>Testlash va xatolarni tuzatish</td><td class="r">10 soat</td><td class="r">$450</td></tr><tr><td>Serverga joylash va avtomatik qayta ishga tushish</td><td class="r">6 soat</td><td class="r">$270</td></tr><tr><td>Animatsion qo'llanma</td><td class="r">6 soat</td><td class="r">$270</td></tr>
+      <tr><td><b>Dasturlash jami</b> <span class="pill">$45/soat</span></td><td class="r">102 soat</td><td class="r"><b>$4 590</b></td></tr>
+      <tr><td>Server, 1 yil</td><td></td><td class="r">$60</td></tr>
+      <tr><td>Texnik xizmat, 12 oy × $50</td><td></td><td class="r">$600</td></tr>
+      <tr class="total"><td>Birinchi yil jami</td><td></td><td class="r">$5 250</td></tr>
+    </table>
+    <p class="note">Soatlik stavka va vaqt — O'rta Osiyo va Sharqiy Yevropa professional dasturchilari narxlari asosidagi taxminiy baho. G'arb studiyalarida narx 2–3 barobar yuqori bo'ladi.</p>
+  </div>
+
+  <div class="grid" style="margin-top:16px">
+    <div class="card reveal">
+      <h3><span class="gl pu md"><svg><use href="#i-flow"/></svg></span>n8n bilan "arzon" variant</h3>
+      <table>
+        <tr><td>n8n Cloud obunasi</td><td class="r">$20 / oy</td></tr>
+        <tr><td>Freelancer o'rnatib berishi</td><td class="r">$50–150</td></tr>
+        <tr><td>1 yil</td><td class="r">≈ $340</td></tr>
+        <tr><td>3 yil</td><td class="r">≈ $820</td></tr>
+      </table>
+      <p class="note">Kamchiliklari: oylik to'lov to'xtasa bot ham to'xtaydi; tugmali admin panel, albomlar, 2 darajali adminlar va Telegram limitlarini boshqarish odatda yo'q yoki qo'shimcha pul turadi.</p>
+    </div>
+    <div class="card reveal">
+      <h3><span class="gl gr md"><svg><use href="#i-wallet"/></svg></span>Mening yechimim</h3>
+      <table>
+        <tr><td>Claude API</td><td class="r">$5</td></tr>
+        <tr><td>Server</td><td class="r">$15</td></tr>
+        <tr><td>Oylik obuna</td><td class="r">$0</td></tr>
+        <tr class="total"><td>Jami</td><td class="r">$20</td></tr>
+      </table>
+      <p class="note">Studiya darajasidagi barcha imkoniyatlar — 2 darajali adminlar, 9 xil media, parallel yuborish, xatolarga chidamlilik — 260 barobar arzon. Kod to'liq o'zimniki, hech qanday platformaga bog'liq emas.</p>
+    </div>
+  </div>
+
+  <div class="card reveal" style="margin-top:16px">
+    <h3><span class="gl or md"><svg><use href="#i-chart"/></svg></span>Taqqoslash</h3>
+    <p style="margin:12px 0 0">Studiyaga buyurtma — $5 250</p><div class="bar"><i style="--w:100%"></i></div>
+    <p style="margin:12px 0 0">n8n, 3 yil — $820</p><div class="bar"><i style="--w:15.6%"></i></div>
+    <p style="margin:12px 0 0">Mening yechimim — $20</p><div class="bar"><i style="--w:1.2%"></i></div>
+    <p class="note">Tejalgan mablag': studiya narxiga nisbatan ≈ $5 230 (99.6%).</p>
+  </div>
+</section>
+</main>
+<footer>🚚 LogiPro Reklama Bot · @logipro_reklama_uz_bot</footer>
+
+<script>
+(async () => {
+  const tg = window.Telegram && Telegram.WebApp;
+  const uid = tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id;
+  const k = new URLSearchParams(location.hash.slice(1)).get('k');
+  if (!uid || !k) return;
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('logipro:' + uid));
+  const hex = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 16);
+  if (hex !== k) return;
+  document.getElementById('gate').remove();
+  tg.ready(); tg.expand();
+  if (tg.colorScheme) document.documentElement.dataset.theme = tg.colorScheme;
+})();
+</script>
+<script>
+const scripts = {
+  chat1: [
+    ['me','/panel'],
+    ['bot','🚚 <b>LogiPro — Boshqaruv paneli</b><br>Holat: 🟢 FAOL<br>🔁 Har 60 daqiqada<br>👥 Faol guruhlar: 12',
+      ['➕ Yangi reklama','📢 Reklamalar','⏱ Vaqt','👥 Guruhlar','🚀 Hozir yuborish','⏸ Pauza'], 4],
+    ['bot','✅ Yuborildi: <b>12</b> ta guruh<br>❌ Xato: <b>0</b>']
+  ],
+  chat2: [
+    ['me','/newad'],
+    ['bot','📝 Reklama kontentini yuboring: rasm, video, GIF, stiker, ovoz...'],
+    ['me','🖼 [rasm]<br>🚛 Toshkent → Moskva, fura bor! 📞 +998...'],
+    ['bot','✅ Reklama <b>#2</b> saqlandi!<br>🔘 Tugma qo\'shasizmi?'],
+    ['me','📞 Bog\'lanish - https://t.me/logist'],
+    ['bot','✅ Tayyor! Reklama navbatga qo\'shildi.']
+  ]
+};
+const timers = {};
+function play(id){
+  const box = document.getElementById(id); box.innerHTML = '';
+  (timers[id]||[]).forEach(clearTimeout); timers[id] = [];
+  scripts[id].forEach((s,i)=>{
+    timers[id].push(setTimeout(()=>{
+      const d = document.createElement('div'); d.className = 'msg ' + s[0]; d.innerHTML = s[1];
+      if (s[2]) { const kb = document.createElement('div'); kb.className='kb';
+        s[2].forEach((t,j)=>{const b=document.createElement('span');b.textContent=t;if(j===s[3])b.className='hit';b.style.animationDelay='1s';kb.appendChild(b)});
+        d.appendChild(kb); }
+      box.appendChild(d);
+      while (box.scrollHeight > box.clientHeight && box.children.length > 1) box.firstChild.remove();
+    }, i*1400));
+  });
+}
+document.querySelectorAll('[data-play]').forEach(b=>b.onclick=()=>play(b.dataset.play));
+const io = new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting) return;
+  e.target.classList.add('on');
+  const c = e.target.querySelector && e.target.querySelector('.chat');
+  if (c && !c.dataset.done) { c.dataset.done = 1; play(c.id); }
+}),{threshold:.2});
+document.querySelectorAll('.reveal, #panel, #newad').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
